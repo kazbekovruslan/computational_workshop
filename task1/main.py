@@ -44,29 +44,29 @@ def find_first_approximation(a, b, f, ddf):
 
 
 # change
-def newton_method(f, df, ddf, a, b, eps):
+def newton_method(f, df, ddf, a, b, epsilon):
     steps = 0
     first_approximation = find_first_approximation(a, b, f, ddf)
     x0 = first_approximation
-    while True:
+    x1 = x0 - f(x0) / df(x0)
+    while abs(x1 - x0) >= epsilon:
         x1 = x0 - f(x0) / df(x0)
-        if abs(x1 - x0) < eps:
-            return x1, steps, first_approximation, abs(x1 - x0)
         x0 = x1
         steps += 1
+    return x1, steps, first_approximation, abs(x1 - x0)
 
 
-def modified_newton_method(f, df, ddf, a, b, eps):
+def modified_newton_method(f, df, ddf, a, b, epsilon):
     steps = 0
     first_approximation = find_first_approximation(a, b, f, ddf)
     x0 = first_approximation
     df_x0 = df(x0)
-    while True:
+    x1 = x0 - f(x0) / df_x0
+    while abs(x1 - x0) >= epsilon:
         x1 = x0 - f(x0) / df_x0
-        if abs(x1 - x0) < eps:
-            return x1, steps, first_approximation, abs(x1 - x0)
         x0 = x1
         steps += 1
+    return x1, steps, first_approximation, abs(x1 - x0)
 
 
 def secant_method(f, a, b, eps):
