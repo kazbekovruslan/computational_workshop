@@ -46,7 +46,6 @@ def main():
     a = float(input("Введите левую границу отрезка [a, b]: "))
     b = float(input("Введите правую границу отрезка [a, b]: "))
 
-    # Построение таблицы
     table_dict = build_table(f, a, b, m_1)
     table = list(table_dict.items())
     print_table(table, "Исходная таблица значений")
