@@ -35,14 +35,15 @@ def print_table(table, title="Таблица значений"):
     print()
 
 
-def main():
+def main(inpt=""):
     print("=== ЗАДАЧА АЛГЕБРАИЧЕСКОГО ИНТЕРПОЛИРОВАНИЯ === ")
-    print("Интерполяционный многочлен в форме Лагранжа")
+    print("Вариант №5")
     print("Функция: f(x) = 1 - exp(-2 * x)")
     print("Интервал: [0, 1]")
     print("n = 7, m + 1 = 15")
 
-    m_1 = int(input("Введите число значений в таблице (m+1): "))
+    m_1 = int(
+        input("Введите число значений в таблице (в наших обозначениях это m+1): "))
     a = float(input("Введите левую границу отрезка [a, b]: "))
     b = float(input("Введите правую границу отрезка [a, b]: "))
 
@@ -50,19 +51,32 @@ def main():
     table = list(table_dict.items())
     print_table(table, "Исходная таблица значений")
 
-    x = float(input("\nВведите точку интерполирования x: "))
-    n = int(
-        input(f"Введите степень интерполяционного многочлена n ≤ {m_1 - 1}: "))
+    x = float(
+        input("\nВведите точку интерполирования x, значение в которой хотите найти: "))
 
-    modified_table = sorted(table, key=lambda z: abs(x - z[0]))[:n + 1]
-    modified_table = sorted(modified_table, key=lambda z: z[0])
-    print_table(modified_table, "Обновленная таблица значений")
+    while inpt != "exit":
+        if inpt != "":
+            x = float(inpt)
+        n = int(
+            input(f"Введите степень интерполяционного многочлена n ≤ {m_1 - 1}: "))
+        while n >= m_1:
+            print("Указано неверное значение n")
+            n = int(
+                input(f"Введите степень интерполяционного многочлена n ≤ {m_1 - 1}: "))
 
-    y_interp = lagrange_polynomial(modified_table, x)
-    print(
-        f"\nЗначение интерполяционного многочлена в точке x = {x}: {y_interp}")
-    print(f"Точное значение функции в точке x = {x}: {f(x)}")
-    print(f"Погрешность интерполяции: {abs(y_interp - f(x))}")
+        modified_table = sorted(table, key=lambda z: abs(x - z[0]))[:n + 1]
+        modified_table = sorted(modified_table, key=lambda z: z[0])
+        print_table(modified_table, "Обновленная таблица значений")
+
+        y_interp = lagrange_polynomial(modified_table, x)
+        print(
+            f"\nЗначение интерполяционного многочлена в точке x = {x}: {y_interp}")
+        print(f"Точное значение функции в точке x = {x}: {f(x)}")
+        print(
+            f"Значение абсолютной фактической погрешности для формы Лагранжа: {abs(y_interp - f(x))}")
+
+        inpt = input(
+            "Введите новое значение x или введите exit, чтобы завершить программу\n")
 
 
 if __name__ == "__main__":
