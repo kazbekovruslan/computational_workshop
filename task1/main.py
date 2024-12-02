@@ -33,7 +33,8 @@ def bisection_method(f, a, b, epsilon):
             b = c
         else:
             a = c
-    return (a + b) / 2, steps, first_approximation, b - a
+    xm = (a + b) / 2
+    return xm, steps, first_approximation, b - a, abs(f(xm))
 
 
 def find_first_approximation(a, b, f, ddf):
@@ -43,7 +44,6 @@ def find_first_approximation(a, b, f, ddf):
     return x0
 
 
-# change
 def newton_method(f, df, ddf, a, b, epsilon):
     steps = 0
     first_approximation = find_first_approximation(a, b, f, ddf)
@@ -53,7 +53,7 @@ def newton_method(f, df, ddf, a, b, epsilon):
         x1 = x0 - f(x0) / df(x0)
         x0 = x1
         steps += 1
-    return x1, steps, first_approximation, abs(x1 - x0)
+    return x1, steps, first_approximation, abs(x1 - x0), abs(f(x1))
 
 
 def modified_newton_method(f, df, ddf, a, b, epsilon):
@@ -66,59 +66,75 @@ def modified_newton_method(f, df, ddf, a, b, epsilon):
         x1 = x0 - f(x0) / df_x0
         x0 = x1
         steps += 1
-    return x1, steps, first_approximation, abs(x1 - x0)
+    return x1, steps, first_approximation, abs(x1 - x0), abs(f(x1))
 
 
 def secant_method(f, a, b, eps):
     steps = 0
+    first_approximation = a
     while abs(b - a) >= eps:
         x2 = b - f(b) * (b - a) / (f(b) - f(a))
         a, b = b, x2
         steps += 1
-    return b, steps, a, abs(b - a)
+    return b, steps, first_approximation, abs(b - a), abs(f(b))
 
 
 def main():
     print("=== ЧИСЛЕННЫЕ МЕТОДЫ РЕШЕНИЯ НЕЛИНЕЙНЫХ УРАВНЕНИЙ ===")
     print("Уравнение: f(x) = x * sin(x) - 1")
     print("Интервал: [A, B] = [-10, 2]")
-    print("Точность: ε = 10^-x")
+    print("Точность: ε = 10^{-5}")
 
     A = int(input("Введите параметр A: "))
     B = int(input("Введите параметр B: "))
-    epsilon = 10 ** (-int(input("Введите x (степень точности): ")))
+    epsilon = 10 ** (-int(input("Введите степень точности ε: ")))
     N = 100
 
     print("\n=== Поиск интервалов изменения знака ===")
     intervals = find_intervals(A, B, f, N)
-    print(f"Найдено {len(intervals)} интервалов: {intervals}")
+    print(f"Найдено {len(intervals)} интервалов:")
+
+    for i, (start, end) in enumerate(intervals, start=1):
+        print(f"  Интервал {i}: [{start:.3f}, {end:.3f}]")
 
     print("\n=== Уточнение корней ===")
+    results = []
+
     for idx, (a, b) in enumerate(intervals, start=1):
-        print(f"\nИнтервал {idx}: [{a:.6f}, {b:.6f}]")
-        bisection_result, b_steps, b_first_approximation, b_diff = bisection_method(
-            f, a, b, epsilon)
-        newton_result, n_steps, n_first_approximation, n_diff = newton_method(
-            f, df, ddf, a, b, epsilon)
-        modified_newton_result, mn_steps, mn_first_approximation, mn_diff = modified_newton_method(
-            f, df, ddf, a, b, epsilon)
-        secant_result, s_steps, s_first_approximation, s_diff = secant_method(
+        print(f"\n=== Интервал {idx}: [{a:.3f}, {b:.3f}] ===")
+
+        b_result, b_steps, b_first_approximation, b_diff, b_residual = bisection_method(
             f, a, b, epsilon)
 
-        print(f"Метод бисекции:")
-        print(
-            f"  Корень: {bisection_result:.6f}, Шагов: {b_steps}, Начальное приближение: {b_first_approximation:.6f}, Расстояние до предыдущего приближения: {abs(b_diff)}")
-        print(f"Метод Ньютона:")
-        print(
-            f"  Корень: {newton_result:.6f}, Шагов: {n_steps}, Начальное приближение: {n_first_approximation:.6f}, Расстояние до предыдущего приближения: {abs(n_diff)}")
-        print(f"Модифицированный метод Ньютона:")
-        print(
-            f"  Корень: {modified_newton_result:.6f}, Шагов: {mn_steps}, Начальное приближение: {mn_first_approximation:.6f}, Расстояние до предыдущего приближения: {abs(mn_diff)}")
-        print(f"Метод секущих:")
-        print(
-            f"  Корень: {secant_result:.6f}, Шагов: {s_steps}, Начальное приближение: {s_first_approximation:.6f}, Расстояние до предыдущего приближения: {abs(s_diff)}")
+        n_result, n_steps, n_first_approximation, n_diff, n_residual = newton_method(
+            f, df, ddf, a, b, epsilon)
 
-    print("\n=== Завершено! ===")
+        mn_result, mn_steps, mn_first_approximation, mn_diff, mn_residual = modified_newton_method(
+            f, df, ddf, a, b, epsilon)
+
+        s_result, s_steps, s_first_approximation, s_diff, s_residual = secant_method(
+            f, a, b, epsilon)
+
+        methods = [
+            ("Метод бисекции", b_first_approximation,
+             b_steps, b_result, b_diff, b_residual),
+            ("Метод Ньютона", n_first_approximation,
+             n_steps, n_result, n_diff, n_residual),
+            ("Модифицированный метод Ньютона", mn_first_approximation,
+             mn_steps, mn_result, mn_diff, mn_residual),
+            ("Метод секущих", s_first_approximation,
+             s_steps, s_result, s_diff, s_residual)
+        ]
+
+        for method_name, first_approximation, steps, result, diff, residual in methods:
+            print(f"{method_name}:")
+            print(f"  Начальное приближение: {first_approximation:}")
+            print(f"  Количество шагов: {steps}")
+            print(f"  Найденное решение: {result:}")
+            print(f"  |x_m - x_m-1|: {diff}")
+            print(f"  Невязка: {residual}")
+
+        results.append((idx, methods))
 
 
 if __name__ == "__main__":
