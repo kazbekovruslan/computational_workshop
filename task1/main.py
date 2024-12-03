@@ -50,8 +50,7 @@ def newton_method(f, df, ddf, a, b, epsilon):
     x0 = first_approximation
     x1 = x0 - f(x0) / df(x0)
     while abs(x1 - x0) >= epsilon:
-        x1 = x0 - f(x0) / df(x0)
-        x0 = x1
+        x1, x0 = x0, x0 - f(x0) / df(x0)
         steps += 1
     return x1, steps, first_approximation, abs(x1 - x0), abs(f(x1))
 
@@ -63,8 +62,7 @@ def modified_newton_method(f, df, ddf, a, b, epsilon):
     df_x0 = df(x0)
     x1 = x0 - f(x0) / df_x0
     while abs(x1 - x0) >= epsilon:
-        x1 = x0 - f(x0) / df_x0
-        x0 = x1
+        x1, x0 = x0, x0 - f(x0) / df_x0
         steps += 1
     return x1, steps, first_approximation, abs(x1 - x0), abs(f(x1))
 
@@ -91,12 +89,22 @@ def main():
     epsilon = 10 ** (-int(input("Введите степень точности ε: ")))
     N = 100
 
-    print("\n=== Поиск интервалов изменения знака ===")
-    intervals = find_intervals(A, B, f, N)
-    print(f"Найдено {len(intervals)} интервалов:")
+    otd = True
+    while otd:
+        N = int(input("Введите на сколько отрезков поделится изначальный отрезок: "))
+        print(f"Длина интервала = {(B - A) / N}")
 
-    for i, (start, end) in enumerate(intervals, start=1):
-        print(f"  Интервал {i}: [{start:.3f}, {end:.3f}]")
+        print("\n=== Поиск интервалов изменения знака ===")
+        intervals = find_intervals(A, B, f, N)
+        print(f"Найдено {len(intervals)} интервалов:")
+
+        for i, (start, end) in enumerate(intervals, start=1):
+            print(f"  Интервал {i}: [{start:.3f}, {end:.3f}]")
+
+        answer = input(
+            "Хотите изменить количество отрезков разбиения? (yes or no): ")
+        if answer == "no":
+            otd = False
 
     print("\n=== Уточнение корней ===")
     results = []
@@ -118,13 +126,13 @@ def main():
 
         methods = [
             ("Метод бисекции", b_first_approximation,
-             b_steps, b_result, b_diff, b_residual),
+                b_steps, b_result, b_diff, b_residual),
             ("Метод Ньютона", n_first_approximation,
-             n_steps, n_result, n_diff, n_residual),
+                n_steps, n_result, n_diff, n_residual),
             ("Модифицированный метод Ньютона", mn_first_approximation,
-             mn_steps, mn_result, mn_diff, mn_residual),
+                mn_steps, mn_result, mn_diff, mn_residual),
             ("Метод секущих", s_first_approximation,
-             s_steps, s_result, s_diff, s_residual)
+                s_steps, s_result, s_diff, s_residual)
         ]
 
         for method_name, first_approximation, steps, result, diff, residual in methods:
@@ -136,6 +144,7 @@ def main():
             print(f"  Невязка: {residual}")
 
         results.append((idx, methods))
+    print("=== Расчет завершен ===")
 
 
 if __name__ == "__main__":
