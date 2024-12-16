@@ -105,7 +105,7 @@ def calculate(func, m_1, h, a):
 
     values_table = [["x_i", "f(x_i)"]]
     for i, (x_i, f_x_i) in enumerate(table):
-        values_table.append([f"{x_i:.13f}", f"{f_x_i:.13f}"])
+        values_table.append([f"{x_i}", f"{f_x_i}"])
 
     print("\nТаблица значений функции:")
     print_table(values_table)
@@ -119,13 +119,13 @@ def calculate(func, m_1, h, a):
         f_2diff = second_derivative(table, h, i)
         f_n_diff = new_first_derivative(table, h, i)
         derivatives_table.append([
-            f"{x_i:.13f}",
-            f"{f_x_i:.13f}",
-            f"{f_diff:.13f}",
-            f"{abs(func.f_diff(x_i) - f_diff):.13f}",
-            f"{f_n_diff:.13f}",
-            f"{abs(func.f_diff(x_i) - f_n_diff):.13f}",
-            f"{f_2diff:.13f}",
+            f"{x_i}",
+            f"{f_x_i:.6f}",
+            f"{f_diff}",
+            f"{abs(func.f_diff(x_i) - f_diff)}",
+            f"{f_n_diff}",
+            f"{abs(func.f_diff(x_i) - f_n_diff)}",
+            f"{f_2diff}",
             f"{abs(func.f_2diff(x_i) - f_2diff):13f}"
         ])
 
@@ -140,15 +140,11 @@ def calculate_runge(func, m_1, h, a):
     values_table = [["x_i", "f(x_i)"]]
 
     for i, (x_i, f_x_i) in enumerate(table_h):
-        values_table.append([f"{x_i:.13f}", f"{f_x_i:.13f}"])
+        values_table.append([f"{x_i}", f"{f_x_i}"])
 
     print("\nТаблица значений функции:")
     print_table(values_table)
 
-    # derivatives_table = [
-    #     ["x_i", "f(x_i)", "J(h)", "|df_true - J(h)|", "J(h/2)", "|df_true - J(h/2)|",
-    #      "J", "|df_true - J|", "J(h) ddf", "J(h/2) ddf", "|ddf_true - J|"]
-    # ]
     derivatives_table_df = [
         ["x_i", "f(x_i)", "J(h)", "|df_true - J(h)|", "J(h/2)", "|df_true - J(h/2)|",
          "J", "|df_true - J|"]
@@ -165,17 +161,17 @@ def calculate_runge(func, m_1, h, a):
         j = (4*j_h_2-j_h)/3
 
         derivatives_table_df.append([
-            f"{x_i:.13f}",
-            f"{f_x_i:.13f}",
-            f"{j_h:.13f}",
-            f"{abs(func.f_diff(x_i) - j_h):.13f}",
-            f"{j_h_2:.13f}",
-            f"{abs(func.f_diff(x_i) - j_h_2):.13f}",
-            f"{j:.13f}",
-            f"{abs(func.f_diff(x_i) - j):.13f}",
+            f"{x_i}",
+            f"{f_x_i:.6f}",
+            f"{j_h}",
+            f"{abs(func.f_diff(x_i) - j_h)}",
+            f"{j_h_2}",
+            f"{abs(func.f_diff(x_i) - j_h_2)}",
+            f"{j}",
+            f"{abs(func.f_diff(x_i) - j)}",
         ])
 
-    print("\nТаблица производных 1:")
+    print("\nТаблица df:")
     print_table(derivatives_table_df)
 
     for i, (x_i, f_x_i) in enumerate(table_h):
@@ -184,17 +180,17 @@ def calculate_runge(func, m_1, h, a):
         j_d2 = (4*j_h_2_d2-j_h_d2)/3
 
         derivatives_table_ddf.append([
-            f"{x_i:.13f}",
-            f"{f_x_i:.13f}",
-            f"{j_h_d2:.13f}",
-            f"{abs(func.f_2diff(x_i) - j_h_d2):.13f}",
-            f"{j_h_2_d2:.13f}",
-            f"{abs(func.f_2diff(x_i) - j_h_2_d2):.13f}",
-            f"{j_d2:.13f}",
-            f"{abs(func.f_2diff(x_i) - j_d2):.13f}",
+            f"{x_i}",
+            f"{f_x_i:.6f}",
+            f"{j_h_d2}",
+            f"{abs(func.f_2diff(x_i) - j_h_d2)}",
+            f"{j_h_2_d2}",
+            f"{abs(func.f_2diff(x_i) - j_h_2_d2)}",
+            f"{j_d2}",
+            f"{abs(func.f_2diff(x_i) - j_d2)}",
         ])
 
-    print("\nТаблица производных 2:")
+    print("\nТаблица ddf:")
     print_table(derivatives_table_ddf)
 
 
