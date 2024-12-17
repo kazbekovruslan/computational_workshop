@@ -197,6 +197,7 @@ def calculate_runge(func, m_1, h, a):
 def main(inpt=""):
     print("=== Нахождение производных таблично-заданной функции по формулам численного дифференцирования === ")
     print("Вариант №5")
+    runge = False
     while True:
         func_number = 0
         while True:
@@ -214,7 +215,7 @@ def main(inpt=""):
                 print("Некорректный ввод! Введите 1 или 2\n")
 
         while True:
-            runge = False
+            # runge = False
 
             while True:
                 m_1 = int(
@@ -244,12 +245,16 @@ def main(inpt=""):
                         break
                     print("Некорректный ввод! Введите 1, 2 или 3\n")
                 if inpt == "1":
+                    runge = False
                     break
                 if inpt == "2":
                     runge = True
+                    break
                 if inpt == "3":
                     break
             if inpt == "1":
+                break
+            if inpt == "2":
                 break
             if inpt == "3":
                 break
