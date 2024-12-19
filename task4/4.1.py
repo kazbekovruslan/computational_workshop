@@ -4,8 +4,39 @@ from tabulate import tabulate
 from scipy.integrate import quad
 
 
+# сумма A_k -- нулевой момент функции
+
+
 def f(x):
     return math.sin(x)
+
+
+def print_table(table):
+    if not table or not table[0]:
+        print("Таблица пуста или имеет неверный формат.")
+        return
+
+    # Рассчитываем ширину каждой колонки
+    col_widths = [max(len(str(row[i])) for row in table) for i in range(len(table[0]))]
+
+    # Печать строки разделителя
+    def print_separator():
+        print("+" + "+".join("-" * (width + 2) for width in col_widths) + "+")
+
+    # Печать строки с данными (альтернативный способ)
+    def print_row(row):
+        row_str = "| "
+        for i, cell in enumerate(row):
+            row_str += f"{str(cell):<{col_widths[i]}} | "
+        print(row_str)
+
+    # Печатаем таблицу
+    print_separator()  # Верхний разделитель
+    print_row(table[0])  # Заголовок таблицы
+    print_separator()  # Разделитель под заголовком
+    for row in table[1:]:
+        print_row(row)  # Строки с данными
+    print_separator()  # Нижний разделитель
 
 
 def exact_integral(a, b):
@@ -72,15 +103,15 @@ def main():
         "Задача 4.1: Приближённое вычисление интегралов при помощи интерполяционных квадратурных формул (ИКФ)"
     )
     print("Вариант 13: f(x) = sin(x), rho(x)=e^(-x)")
-    print("Введите границы интегрирования")
-    a, b = map(float, input().split())
+    a = float(input("Введите левую границу интегрирования: "))
+    b = float(input("Введите правую границу интегрирования: "))
 
     print(f"Отрезок интегрирования: [{a}, {b}]")
 
     exact_value = exact_integral(a, b)
     print(f"Точное значение интеграла: {exact_value:.12f}")
 
-    N = int(input("Введите количество узлов (N): "))
+    N = int(input("\nВведите количество узлов ИКФ (N): "))
     print("Введите узлы (через пробел):")
 
     nodes = list(map(float, input().split()))
@@ -109,13 +140,14 @@ def main():
 
     # Шаг 4: Решение СЛАУ для коэффициентов
     coefficients = solve_coefficients(nodes, moments)
+
     print("\nТаблица узлов и коэффициентов:")
-    table = [[f"x_{i+1}", nodes[i], coefficients[i]] for i in range(N)]
-    print(
-        tabulate(
-            table, headers=["Узел", "Значение узла", "Коэффициент"], floatfmt=".12f"
-        )
-    )
+    table = [["№", "Узел", "Коэффициент"]]
+    table_1 = [[f"x_{i+1}", nodes[i], coefficients[i]] for i in range(N)]
+    table += table_1
+
+    print_table(table)
+
     print("Сумма коэффициентов:", sum(coefficients))
     print()
     print("Проверка точности:")
