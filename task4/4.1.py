@@ -46,23 +46,12 @@ def exact_integral(a, b):
     return F(b) - F(a)
 
 
-"""[a,b] ∫ x^k *\rho(x) dx"""
-
-
 def weight_moments(a, b, degree):
     moments = []
     for k in range(degree + 1):
         moment, _ = quad(lambda x: x**k * math.exp(-x), a, b)
         moments.append(moment)
     return moments
-
-
-"""чтобы построить ИКФ, она должна быть точной для всех многочленов степени N-1. Это приводит к системе линейных уравнений:
-∑_{k=1}^N Aₖ xₖʲ = μⱼ,  j = 0, 1, …, N-1.
-
-где:
-    μⱼ = ∫ₐᵇ xʲ * rho(x) dx, где j = 0, 1, 2, ..., N-1.
- — j-й момент весовой функции."""
 
 
 def solve_coefficients(nodes, moments):
@@ -92,7 +81,7 @@ def check_accuracy(coefficients, nodes, N, a, b):
         ikf_value = calculate_ikf_integral(f_values, coefficients)
 
         # Сравниваем точное и приближенное значение
-        print(f"Для многочлена степени {degree}:")
+        print(f"Многочлен степени {degree}:")
         print(f"Точное значение интеграла: {exact_value:.12f}")
         print(f"Приближенное значение ИКФ: {ikf_value:.12f}")
         print(f"Ошибка: {abs(exact_value - ikf_value):.12e}\n")
@@ -136,7 +125,7 @@ def main():
     moments = weight_moments(a, b, N - 1)
     print("\nМоменты весовой функции:")
     for i, moment in enumerate(moments):
-        print(f"μ_{i} =  ∫ₐᵇ x^{i} * e^(-x) dx = {moment:.12f}")
+        print(f"μ_{i} =  [a,b] ∫ x^{i} * e^(-x) dx = {moment:.12f}")
 
     # Шаг 4: Решение СЛАУ для коэффициентов
     coefficients = solve_coefficients(nodes, moments)
@@ -152,10 +141,10 @@ def main():
     print()
     print("Проверка точности:")
     check_accuracy(coefficients, nodes, N, a, b)
-    print("Результат решения:")
+
     f_values = [f(node) for node in nodes]
     ikf_value = calculate_ikf_integral(f_values, coefficients)
-    print(f"Значение интеграла с помощью ИКФ: {ikf_value:.12f}")
+    print(f"\nЗначение интеграла с помощью ИКФ: {ikf_value:.12f}")
     print(f"Точное значение: {exact_value:.12f}")
     print(f"Разница между точным и ИКФ: {abs(exact_value - ikf_value):.12e}")
 
