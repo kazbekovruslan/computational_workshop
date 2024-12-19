@@ -41,7 +41,7 @@ def print_table(table):
 
 def exact_integral(a, b):
     def F(x):
-        return -0.5 * math.exp(-x) * (math.sin(x) + math.cos(x))
+        return 0.5 * math.exp(x) * (math.sin(x) - math.cos(x))
 
     return F(b) - F(a)
 
@@ -49,7 +49,7 @@ def exact_integral(a, b):
 def weight_moments(a, b, degree):
     moments = []
     for k in range(degree + 1):
-        moment, _ = quad(lambda x: x**k * math.exp(-x), a, b)
+        moment, _ = quad(lambda x: x**k * math.exp(x), a, b)
         moments.append(moment)
     return moments
 
@@ -74,7 +74,7 @@ def check_accuracy(coefficients, nodes, N, a, b):
             return x**degree
 
         # Вычисляем точное значение интеграла для многочлена
-        exact_value, _ = quad(lambda x: poly(x, degree) * math.exp(-x), a, b)
+        exact_value, _ = quad(lambda x: poly(x, degree) * math.exp(x), a, b)
 
         # Вычисляем приближенное значение через ИКФ
         f_values = [poly(x) for x in nodes]
@@ -84,14 +84,14 @@ def check_accuracy(coefficients, nodes, N, a, b):
         print(f"Многочлен степени {degree}:")
         print(f"Точное значение интеграла: {exact_value:.12f}")
         print(f"Приближенное значение ИКФ: {ikf_value:.12f}")
-        print(f"Ошибка: {abs(exact_value - ikf_value):.12e}\n")
+        print(f"Погрешность: {abs(exact_value - ikf_value):.12e}\n")
 
 
 def main():
     print(
         "Задача 4.1: Приближённое вычисление интегралов при помощи интерполяционных квадратурных формул (ИКФ)"
     )
-    print("Вариант 13: f(x) = sin(x), rho(x)=e^(-x)")
+    print("Вариант 8: f(x) = sin(x), ρ(x)=e^x")
     a = float(input("Введите левую границу интегрирования: "))
     b = float(input("Введите правую границу интегрирования: "))
 
@@ -125,7 +125,7 @@ def main():
     moments = weight_moments(a, b, N - 1)
     print("\nМоменты весовой функции:")
     for i, moment in enumerate(moments):
-        print(f"μ_{i} =  [a,b] ∫ x^{i} * e^(-x) dx = {moment:.12f}")
+        print(f"μ_{i} =  [a,b] ∫ x^{i} * e^x dx = {moment:.12f}")
 
     # Шаг 4: Решение СЛАУ для коэффициентов
     coefficients = solve_coefficients(nodes, moments)
