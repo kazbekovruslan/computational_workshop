@@ -30,11 +30,12 @@ def derivative(i):
     return arr[i]
 
 
-def derivative(i):
-    arr = []
-    return arr[i]
+# def derivative(i):
+#     arr = [0, 0, 1, -1, 0, 0]
+#     return arr[i]
 
 
+# Метод Тейлора
 def taylor_method(x0, y0, h, N):
     x_vals = [x0 + k * h for k in range(-2, N + 1)]
     y_vals = [0] * len(x_vals)
@@ -109,7 +110,7 @@ def adams_4th_order(x0, y0, h, N):
     # Получаем начальные значения из метода Тейлора
     x, y = taylor_method(x0, y0, h, N)
 
-    for i in range(3, len(y)-1):
+    for i in range(4, len(y)-1):
         y[i+1] = y[i] + h/24 * (55 * f(x[i], y[i]) - 59 * f(x[i-1],
                                 y[i-1]) + 37 * f(x[i-2], y[i-2]) - 9 * f(x[i-3], y[i-3]))
         # print(y[i+1])
