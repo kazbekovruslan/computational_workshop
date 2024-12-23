@@ -8,7 +8,8 @@ def print_table(table):
         return
 
     # Рассчитываем ширину каждой колонки
-    col_widths = [max(len(str(row[i])) for row in table) for i in range(len(table[0]))]
+    col_widths = [max(len(str(row[i])) for row in table)
+                  for i in range(len(table[0]))]
 
     # Печать строки разделителя
     def print_separator():
@@ -114,16 +115,12 @@ def main():
 
     running = True
     while running:
-        a = float(input("Введите нижний предел интегрирования A: "))
-        b = float(input("Введите верхний предел интегрирования B: "))
-        m = int(input("Введите число промежутков деления m: "))
-
         function = int(
             input(
                 "Выберите функцию:\n1. f = sin(x)\n2. f = 1\n3. f = 2x\n4. f = 3x^2\n5. f = 4x^3\n"
             )
         )
-        while function not in [1, 2, 3, 4]:
+        while function not in [1, 2, 3, 4, 5]:
             print("Некорректный ввод! Выберите функцию (введите цифру от 1 до 4)")
             function = int(
                 input(
@@ -142,6 +139,10 @@ def main():
                 func = f_2
             case 5:
                 func = f_3
+
+        a = float(input("Введите нижний предел интегрирования A: "))
+        b = float(input("Введите верхний предел интегрирования B: "))
+        m = int(input("Введите число промежутков деления m: "))
 
         j_exact = exact_integral(func, a, b)
         h = (b - a) / m
@@ -202,14 +203,16 @@ def main():
             abs_error_l = abs(j_exact - j_l)
             rel_error_l = abs_error_l / abs(j_exact)
             table_l.append(
-                [method, f"{j_l:.15f}", f"{abs_error_l:.15e}", f"{rel_error_l:.15e}"]
+                [method, f"{j_l:.15f}", f"{abs_error_l:.15e}",
+                    f"{rel_error_l:.15e}"]
             )
 
         print(f"\nРезультаты для m*l= {m*l}:")
         print_table(table_l)
 
         # Таблица результатов с уточнением по Рунге для m*l
-        table_runge_l = [["Метод", "J(точн. для m*l)", "Абс. погр.", "Отн. погр."]]
+        table_runge_l = [
+            ["Метод", "J(точн. для m*l)", "Абс. погр.", "Отн. погр."]]
         for method, j_l, j_h2l, p in zip(methods, j_approx_l, j_approx_h2l, orders):
             j_specified_l = runge_correction_pair(j_l, j_h2l, p)
             abs_error_ref_l = abs(j_exact - j_specified_l)
