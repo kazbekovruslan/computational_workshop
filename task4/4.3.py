@@ -103,6 +103,21 @@ def composite_quadratures(f, a, b, m):
     trapezoid = complex_trapeze_method(f, a, b, m)
     simpson = complex_simpson_method(f, a, b, m)
 
+    if m == 1:
+        x = np.linspace(a, b, m + 1)
+        three_eighths = 0
+        for i in range(m):
+            a_k = x[i]
+            b_k = x[i + 1]
+            h_38 = (b_k - a_k) / 3
+            three_eighths += (b_k - a_k) * (
+                (1 / 8) * f(a_k) +
+                (3 / 8) * f(a_k + h_38) +
+                (3 / 8) * f(a_k + 2 * h_38) +
+                (1 / 8) * f(b_k)
+            )
+        return left_rect, right_rect, mid_rect, trapezoid, simpson, three_eighths
+
     return left_rect, right_rect, mid_rect, trapezoid, simpson
 
 
@@ -163,6 +178,16 @@ def main():
         ]
         orders = [1, 1, 2, 2, 4]
 
+        if m == 1:
+            methods = [
+                "Левые прямоугольники",
+                "Правые прямоугольники",
+                "Средние прямоугольники",
+                "Трапеции",
+                "Метод 3/8",
+                "Симпсона",
+            ]
+
         table = [["Метод", "J(h)", "Абс. погр.", "Отн. погр."]]
         for method, j in zip(methods, j_approx):
             abs_error = abs(j_exact - j)
@@ -174,6 +199,9 @@ def main():
         print(f"Результаты для m = {m}:")
         print_table(table)
 
+        if m == 1:
+            print("=== Завершение работы ===")
+            return
         # Таблица результатов с уточнением по Рунге для m
         table_runge = [["Метод", "J(точн.)", "Абс. погр.", "Отн. погр."]]
         for method, j, j_h2, p in zip(methods, j_approx, j_approx_h2, orders):
