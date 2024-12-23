@@ -41,7 +41,7 @@ def print_table(table):
     print_separator()  # Разделитель под заголовком
     for row in table[1:]:
         print_row(row)  # Строки с данными
-        print_separator()  # Нижний разделитель
+    print_separator()  # Нижний разделитель
 
 
 def taylor_method(x0, y0, h, N):
@@ -185,11 +185,12 @@ def main():
             print_table(table_data)
 
             choice = input(
-                "\nВыберите действие:\n1. Ввести новые параметры N и h.\n2. Завершить программу.\nВаш выбор: ")
+                "Введите 1, чтобы выбрать новые параметры N и h; или 2 -- чтобы завершить программу: ")
             if choice == "1":
                 print()
                 continue
             elif choice == "2":
+                print("=== Завершение работы ===")
                 break
             else:
                 print("Неверный выбор, попробуйте снова.")
