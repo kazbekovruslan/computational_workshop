@@ -10,7 +10,7 @@ def f(x, y):
 
 
 def derivative(i):
-    arr = [0, 0, 1, -1, 0, 0, 1, -1, 0, 0, 1, -1]
+    arr = [0, 0, 1, -1, 0, 0, 1, -1]
     return arr[i]
 
 
@@ -51,7 +51,7 @@ def taylor_method(x0, y0, h, N):
     for k in range(-2, N+1):
         x_k = x0 + k * h
         y_vals[k+2] = sum(derivative(i) * (x_k - x0)**i /
-                          math.factorial(i) for i in range(12))
+                          math.factorial(i) for i in range(8))
     return x_vals, y_vals
 
 
@@ -155,7 +155,7 @@ def main():
 
             table_data = []
             headers = [[
-                "Шаг", "x", "Точное",
+                "Шаг", "x", "Точное значение",
                 "Тейлор", "Погрешность Тейлор", "Рунге-Кутта", "Эйлер", "Эйлер I", "Эйлер II", "Адамс 4-го порядка"
             ]]
             table_data += headers
